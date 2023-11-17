@@ -9,7 +9,6 @@ const {
 //create
 const create = async(req, res, next) => {
     try {
-        // const { name } = req.body;
         const result = await createCategories(req);
         res.status(StatusCodes.CREATED).json({
             data: result,
@@ -22,7 +21,7 @@ const create = async(req, res, next) => {
 //get
 const index = async(req, res, next) => {
     try {
-        const result = await getAllCategories();
+        const result = await getAllCategories(req);
         res.status(StatusCodes.OK).json({
             data: result,
         });

@@ -1,7 +1,8 @@
 const Categories = require('../../api/v1/categories/model');
 const { BadRequestError, NotFoundError } = require('../../errors');
 
-const getAllCategories = async () => {
+
+const getAllCategories = async (req) => {
     const result = await Categories.find();
     return result;
 };
@@ -9,16 +10,20 @@ const getAllCategories = async () => {
 const createCategories = async (req) => {
 
     const { name } = req.body;
-
-    const check = await Categories.findOne({ name });
+    
+    const check = await Categories.findOne({name});
     if (check) throw new BadRequestError('Duplicated Categories Name');
-    const result = await Categories.create({ name });
+    const result = await Categories.create({ 
+        name});
     return result;
 };
 
 const getOneCategories = async (req) =>{
     const { id } = req.params;
-    const result = await Categories.findOne({ _id: id });
+    const result = await Categories.findOne({ 
+        _id: id,
+        organizer: req.user.organizer
+    });
 
     if(!result) throw new NotFoundError(`ID Categories not Found : ${id}`);
     return result;
@@ -32,6 +37,7 @@ const updateCatgories = async (req) => {
     const check = await Categories.findOne({
         name,
         _id: { $ne: id },
+        organizer: req.user.organizer
     });
 
     if (check) throw new BadRequestError('Duplicated Category');
@@ -50,6 +56,7 @@ const deleteCategories = async (req) => {
     const { id } = req.params;
     const result = await Categories.findOne({
         _id: id,
+        organizer: req.user.organizer
     });
 
     if (!result) throw new NotFoundError('Categories Not Found');
@@ -59,10 +66,22 @@ const deleteCategories = async (req) => {
     return result;
 };
 
+const checkingCategories = async (id) => {
+    const result = await Categories.findOne({ 
+        _id: id,
+        organizer: req.user.organizer
+    });
+  
+    if (!result) throw new NotFoundError(`Tidak ada Kategori dengan id :  ${id}`);
+  
+    return result;
+  };
+
 module.exports = { 
     getAllCategories,
     createCategories,
     getOneCategories,
     updateCatgories,
     deleteCategories,
+    checkingCategories,
 };
