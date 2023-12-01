@@ -34,9 +34,9 @@ let contentSchema = Schema(
     // }
 
     category: {
-      type: mongoose.Types.ObjectId,
-      ref: 'Category',
-      required: true,
+      type: String,
+      minlength: [5],
+      required: [true]
   },
   },
   { timestamps: true }

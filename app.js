@@ -6,8 +6,10 @@ const logger = require('morgan');
 const app = express();
 
 // router
-const categoriesRouter = require('./app/api/v1/categories/router');
 const contentesRouter = require('./app/api/v1/contents/router');
+const authRouter = require('./app/api/v1/auth/router');
+const talentsRouter = require('./app/api/v1//accounts/router');
+const userRouter = require('./app/api/v1/users/router');
 
 
 const v1 = '/api/v1/cms';
@@ -28,9 +30,10 @@ app.get('/', (req, res) => {
     });
 });
 
-
-app.use(v1, categoriesRouter);
 app.use(v1, contentesRouter);
+app.use(v1, userRouter);
+app.use(v1, talentsRouter);
+app.use(v1, authRouter);
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 module.exports = app;
